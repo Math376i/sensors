@@ -1,5 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:smooth_compass/utils/src/compass_ui.dart';
+import 'package:tilt/tilt.dart';
 
 import 'app_scaffold.dart';
 import 'demos_drawer.dart';
@@ -107,7 +109,36 @@ class _CameraWidgetState extends State<CameraWidget> {
         if (snapshot.connectionState == ConnectionState.done) {
           // If the Future is complete, display the preview.
           return Column(
-            children: [CameraPreview(_controller), _takePictureButton(context)],
+            children: [
+              Stack(alignment: Alignment.center, children: <Widget>[
+                CameraPreview(_controller),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Center(
+                    child: StreamBuilder<Tilt>(
+                      stream: DeviceTilt(
+                        samplingRateMs: 1,
+                        initialTilt: const Tilt(0, 0),
+                        filterGain: 0.1,
+                      ).stream,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData && snapshot.data != null) {
+                          return Transform.rotate(
+                            angle: snapshot.data!.yRadian / 2 * -1,
+                            child: Container(
+                              width: 100,
+                              height: 2,
+                              color: Colors.pink,
+                            ),
+                          );
+                        }
+                        return const CircularProgressIndicator();
+                      },
+                    ),
+                  ),
+                ),
+              ])
+            ],
           );
         } else {
           // Otherwise, display a loading indicator.
