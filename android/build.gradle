@@ -8,7 +8,13 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
+    }   
+
+    android {                                                                                                       │
+│   defaultConfig {                                                                                               │
+│     minSdkVersion 21                                                                                            │
+│   }                                                                                                             │
+│ }                                                                              
 }
 
 allprojects {
@@ -29,3 +35,4 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
